@@ -52,10 +52,10 @@ Tools - MongoDB Compass (For Visualization), VS Code Editor
      >>> git clone https://github.com/prateeksharma0112/ToDoApp.git
 
 4. Start MongoDb server at local Host
-     >>> sudo systemctl start MongoDB
+     >>> sudo systemctl start mongod
 
      Check the status whether it is running or not
-     >>> sudo systemctl status MongoDB --> it should be Active 
+     >>> sudo systemctl status mongod --> it should be Active 
 
 5.  Start the Application
     >>> python3 manage.py runserver
