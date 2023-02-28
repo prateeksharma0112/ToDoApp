@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do App</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/homePage.css' %}">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="{% static "js/bootstrap.bundle.min.js"%}"></script>
+    <!-- our project just needs Font Awesome Solid + Brands -->
+    <link href="{%  static 'fontawesome-free-6.2.0-web/css/fontawesome.css' %}" rel="stylesheet">
+    <link href="{%  static 'fontawesome-free-6.2.0-web/css/brands.css' %}" rel="stylesheet">
+    <link href="{%  static 'fontawesome-free-6.2.0-web/css/solid.css' %}" rel="stylesheet">
+</head>
+
+<body>
+
+        <div class="text-center">
+                <!--Add To-Do Button-->
+                <div id="add-btn-container">
+                    <button type="button" class="btn btn-success" id="addToDoButton" data-bs-toggle="modal" data-bs-target="#addModal"><i
+                    class="fa-solid fa-pen-to-square"></i> ADD TO DO</button>
+                </div>
+        </div>
+    <main>
+        <!-- To-Do Card Templates-->
+        <div class="row row-cols-1 row-cols-md-4 g-3">
+            <!-- Loop Start-->
+            {% for data in toDo_data %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text"><b>To Do : {{forloop.counter}}</b></p>
+                        <h5 class="card-title" style="text-align: center;">{{data.title}}</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><span class="left-span">Description : </span><span
+                            class="right-span">{{data.description}}</span></li>
+                    </ul>
+                    <div id="action-btn" class="card-body">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#editModal-{{forloop.counter}}"><i class="fa-solid fa-user-pen"></i>
+                            Edit</button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal-{{forloop.counter}}"><i class="fa-solid fa-trash"></i>
+                            Delete</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <!--Loop End-->
+
+            <!-- Add To Do Modal-->
+            <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="addModalLabel"><i class="fa-solid fa-pen-to-square"></i> Enter Your To Do</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="" name="id" />
+                                <div class="mb-3">
+                                    <label for="title" class="col-form-label">Title :</label>
+                                    <input type="text" class="form-control" name="title" id="title" value=""
+                                        placeholder="Enter Title " required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="col-form-label">Description :</label>
+                                    <input type="text" class="form-control"  name="description" id="description" value=""
+                                        placeholder="Enter Description " required">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Exit</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Delete Modal -->
+            {% for data in toDo_data %}
+            <div class="modal fade" id="deleteModal-{{forloop.counter}}" tabindex="-1"
+                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel"><i class="fa-solid fa-trash"></i>
+                                Delete To-Do
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure, you want to delete <b>{{data.title}}</b> from ToDo List ?</p>
+                            <p class="text-warning"><small>This Action Cannot Be Undone !!!</small></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{data.id}}" name="del-id">
+                                <input type="hidden" value="del" name="DELETE">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Edit Modal -->
+            {% for data in toDo_data %}
+            <div class="modal fade" id="editModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="editModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="editModalLabel"><i class="fa-regular fa-pen-to-square"></i> Edit Your To Do </h4>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="title" class="col-form-label">Title :</label>
+                                    <input type="text" class="form-control" name="title" id="title"
+                                        value="{{data.title}}" placeholder="" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="col-form-label">Description :</label>
+                                    <input type="text" class="form-control" name="description" id="description"
+                                        value="{{data.description}}" placeholder="" required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <input type="hidden" value="{{data.id}}" name="edit-id">
+                                    <!-- <input type="hidden" value="edit" name="EDIT"> -->
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+
+</html>
