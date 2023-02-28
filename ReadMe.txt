@@ -49,7 +49,7 @@ Tools - MongoDB Compass (For Visualization), VS Code Editor
 3. Create toDoAppProject Folder and Clone the Project
      >>> mkdir toDoAppProject
      >>> cd toDoAppProject
-     >>> git clone ???????????
+     >>> git clone https://github.com/prateeksharma0112/ToDoApp.git
 
 4. Start MongoDb server at local Host
      >>> sudo systemctl start MongoDB
